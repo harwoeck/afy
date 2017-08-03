@@ -55,17 +55,6 @@ func init() {
 }
 
 func main() {
-	/*
-		http.HandleFunc("/f/", func(w http.ResponseWriter, r *http.Request) {
-			handle(w, r, "/f/aaaaaaaabbbbbbbbccccccccdddddddd/", strings.TrimPrefix(r.URL.Path, "/f/aaaaaaaabbbbbbbbccccccccdddddddd/"))
-		})
-		err := http.ListenAndServe(":80", nil)
-		if err != nil {
-			log.Error(err.Error())
-		}
-		return
-	*/
-
 	tmpl = template.Must(template.New("page").Parse(page))
 	users = make(map[string]int)
 
