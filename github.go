@@ -8,19 +8,15 @@ import (
 )
 
 func githubLogin(w http.ResponseWriter, r *http.Request) {
-	session, err := cookies.Get(r, cookieOAuthState)
-	if err != nil {
+	log.Info("In githubLogin")
+	session, err := cookies.Get(r, "_oauthState")
+	if err != nil && err.Error() != "securecookie: the value is not valid" {
 		log.Error(err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	stateString, err := keyProvider(32, 10)
-	if err != nil {
-		log.Error(err.Error())
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	stateString := keyProvider(32)
 
 	session.Values["github"] = stateString
 	err = session.Save(r, w)
@@ -31,11 +27,13 @@ func githubLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	url := configGithub.AuthCodeURL(stateString)
+	log.Warningf("Redirect to url(%s) with state(%s)", url, stateString)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
 func githubCallback(w http.ResponseWriter, r *http.Request) {
-	session, err := cookies.Get(r, cookieOAuthState)
+	log.Info("In githubCallback")
+	session, err := cookies.Get(r, "_oauthState")
 	if err != nil {
 		log.Error(err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
@@ -46,15 +44,15 @@ func githubCallback(w http.ResponseWriter, r *http.Request) {
 	var expectedState string
 	var ok bool
 	if expectedState, ok = state.(string); !ok {
-		log.Errorf("couldn't get expectedState from cookie %s.github", cookieOAuthState)
+		log.Errorf("couldn't get expectedState from cookie %s.github", "_oauthState")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	actualState := r.FormValue("state")
 	if actualState != expectedState {
-		log.Error("couldn't authenticate user: actualState and expectedState don't match. login denied")
-		w.WriteHeader(http.StatusInternalServerError)
+		log.Warningf("couldn't authenticate user: actualState(%s) and expectedState(%s) don't match. login denied", actualState, expectedState)
+		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 
@@ -77,15 +75,10 @@ func githubCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	key, err := keyProvider(32, 10)
-	if err != nil {
-		log.Error(err.Error())
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	key := keyProvider(32)
 
 	users[key] = *githubUser.ID
-	log.Info("login: github(%d) -> %s", *githubUser.ID, key)
+	log.Infof("login: github(%d) -> %s", *githubUser.ID, key)
 
-	http.Redirect(w, r, "/fs/"+key+"/", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, "/f/"+key+"/", http.StatusTemporaryRedirect)
 }
