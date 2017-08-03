@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"flag"
+	"html/template"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -22,6 +23,7 @@ var config *configuration
 var configGithub *oauth2.Config
 var cookies *sessions.CookieStore
 var users map[string]int
+var page string
 
 const (
 	cookieOAuthState = "_oast"
@@ -59,9 +61,41 @@ func init() {
 	if err != nil {
 		log.Error(err.Error())
 	}
+
+	cnt, _ := ioutil.ReadFile("index.html")
+	page = string(cnt)
 }
 
 func main() {
+	tmpl := template.Must(template.New("page").Parse(page))
+	http.HandleFunc("/fs/", func(w http.ResponseWriter, r *http.Request) {
+		res, isDwld, isFrbn, is404, is500 := getDirList("/fs/", strings.TrimPrefix(r.URL.Path, "/fs/"))
+		if isFrbn {
+			w.WriteHeader(http.StatusForbidden)
+			return
+		}
+		if is404 {
+			log.Warning("not found")
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		if is500 {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		if isDwld {
+			log.Critical("ISDWLD")
+			log.Info(r.URL.Path)
+			http.StripPrefix("/fs/", fs).ServeHTTP(w, r)
+		}
+		tmpl.Execute(w, res)
+	})
+	err := http.ListenAndServe(":80", nil)
+	if err != nil {
+		log.Error(err.Error())
+	}
+	return
+
 	users = make(map[string]int)
 	fs = http.FileServer(http.Dir(config.Root))
 
@@ -121,7 +155,7 @@ func recoveryHandler(handler func(http.ResponseWriter, *http.Request)) func(http
 }
 
 func assertLogin(w http.ResponseWriter, r *http.Request) {
-	url := r.URL.Path[len("/fs/"):]
+	/*url := r.URL.Path[len("/fs/"):]
 	if !strings.Contains(url, "/") {
 		w.WriteHeader(http.StatusForbidden)
 		return
@@ -136,6 +170,6 @@ func assertLogin(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
-	log.Infof("access: %d -> '%s'", id, url[32:])
+	log.Infof("access: %d -> '%s'", id, url[32:])*/
 	fs.ServeHTTP(w, r)
 }

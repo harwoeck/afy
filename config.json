@@ -2,10 +2,10 @@
     "addr": "127.0.0.1:8082",
 
     "host": "public.afy.io",
-    "cert": "public_afy_io_chain.pem",
-    "key": "public_afy_io_key.pem",
+    "cert": "",
+    "key": "",
 
-    "root": "/var/afystorage/",
+    "root": "/mnt/c/repos/vikebot-web/",
 
     "session_auth": "d9337ca1073784d84d4c0cbc2cc5a840",
     "session_crypt": "8b5a1be2c1bb70c7ec5e5d0caa478cd7",

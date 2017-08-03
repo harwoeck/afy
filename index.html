@@ -1,0 +1,117 @@
+<html lang="en">
+<body>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css">
+    <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono');
+        body {
+            padding: 1rem !important;
+        }
+        h1 {
+            margin-top: 0 !important;
+        }
+        tr:hover {
+            background-color: whitesmoke;
+        }
+        td {
+            font-family: 'Ubuntu Mono', monospace;
+            padding-top: 0.05em !important;
+            padding-bottom: 0.05em !important;
+        }
+        a:hover {
+            text-decoration: underline !important;
+            background-color: lightgray;
+        }
+    </style>
+</body>
+<head>
+    <h1>Index of {{.QuickPathNavigation}}</h1>
+    <div class="ui grid">
+        <div class="twelve wide column">
+            <table class="ui very compact table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Modified</th>
+                        <th>Size (byte)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .Index}}
+                    <tr>
+                        <td><a href="{{.Link}}">{{.Name}}</a></td>
+                        <td>{{.Modified}}</td>
+                        <td>{{.Size}}</td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+        <div class="four wide column">
+            <div class="ui segment">
+                <div class="ui top attached label">Quick navigation</div>
+                <div class="ui search">
+                    <div class="ui fluid icon input">
+                        <input class="prompt" type="text" placeholder="Type your directory ...">
+                        <i class="search icon"></i>
+                    </div>
+                    <div class="results"></div>
+                </div>
+            </div>
+            <div class="ui segment">
+                <div class="ui top attached label">Details</div>
+                <div class="ui list">
+                    <div class="item">
+                        <div class="header">Directory</div>{{.QuickPathNavigation}}</div>
+                    <div class="item">
+                        <div class="header">Size</div>{{.DirSize}}</div>
+                </div>
+                {{if .Package}}
+                <div class="ui horizontal divider">Package</div>
+                <div class="ui list">
+                    <div class="item"><div class="header">Name</div>vbgs</div>
+                    <div class="item"><div class="header">Hierarchy</div>2</div>
+                    <div class="item"><div class="header">Depends on</div>{{.PackageDependsOn}}</div>
+                    <!--
+                        <img src="https://img.shields.io/badge/coverage-67.4%25%20(atomic)-green.svg">
+                        <img src="https://img.shields.io/badge/tests-127%20%2F%20129-red.svg">
+                    -->
+                </div>
+                {{end}}
+                {{if .Git}}
+                <div class="ui horizontal divider">Git</div>
+                <div class="ui list">
+                    <div class="item"><div class="header">Commit</div><a href="{{.GitLink}}">{{.GitHash}}</a></div>
+                    <div class="item"><div class="header">Message</div>{{.GitMessage}}</div>
+                </div>
+                {{end}}
+                {{if .CI}}
+                <div class="ui horizontal divider">CI</div>
+                <div class="ui list">
+                    <div class="item"><div class="header">Job</div><a href="{{.CILink}}">{{.CIJob}}</a></div>
+                    <div class="item"><div class="header">Build time</div>{{.CIBuildTime}}</div>
+                    {{if .CIHasReport}}
+                    <div class="item"><div class="header">Coverage</div>{{.CICoverage}} - <a href="_coverage.afy">Report</a></div>
+                    {{end}}
+                </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+    <script>
+        $('.ui.search').search({
+            apiSettings: {
+                url: '//api.github.com/search/repositories?q={query}'
+            },
+            fields: {
+                results: 'items',
+                title: 'name',
+                url: 'html_url'
+            },
+            minCharacters: 3,
+            showNoResults: true
+        });
+    </script>
+</head>
+</html>
