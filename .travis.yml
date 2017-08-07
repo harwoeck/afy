@@ -1,0 +1,22 @@
+language: go
+sudo: true
+
+matrix:
+  include:
+    - go: 1.7
+    - go: 1.8
+    - go: tip
+  allow_failures:
+    - go: tip
+
+script: 
+  - go test -v -cover -covermode atomic
+  - go build -o afy -i -v
+
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/3b5a8b83392d2f7e616a
+    on_success: change
+    on_failure: change
+    on_start: never
