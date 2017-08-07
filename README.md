@@ -3,4 +3,6 @@
 </h1>
 
 [![Build Status](https://travis-ci.org/harwoeck/afy.svg?branch=master)](https://travis-ci.org/harwoeck/afy)
+[![GNU GPL v3.0 License Badge](https://img.shields.io/badge/license-GNU%20GPL--3.0-blue.svg)](https://github.com/harwoeck/afy/blob/master/LICENSE)
+![Version: v0.1-beta](https://img.shields.io/badge/version-v0.1--beta-orange.svg)
 [![Join the chat at https://gitter.im/harwoeck/afy](https://badges.gitter.im/harwoeck/afy.svg)](https://gitter.im/harwoeck/afy?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
