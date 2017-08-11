@@ -8,11 +8,10 @@ import (
 )
 
 func githubLogin(w http.ResponseWriter, r *http.Request) {
-	log.Info("In githubLogin")
 	session, err := cookies.Get(r, "_oauthState")
 	if err != nil && err.Error() != "securecookie: the value is not valid" {
 		log.Error(err.Error())
-		w.WriteHeader(http.StatusInternalServerError)
+		sendError(w, http.StatusInternalServerError)
 		return
 	}
 
@@ -22,21 +21,19 @@ func githubLogin(w http.ResponseWriter, r *http.Request) {
 	err = session.Save(r, w)
 	if err != nil {
 		log.Error(err.Error())
-		w.WriteHeader(http.StatusInternalServerError)
+		sendError(w, http.StatusInternalServerError)
 		return
 	}
 
 	url := configGithub.AuthCodeURL(stateString)
-	log.Warningf("Redirect to url(%s) with state(%s)", url, stateString)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
 func githubCallback(w http.ResponseWriter, r *http.Request) {
-	log.Info("In githubCallback")
 	session, err := cookies.Get(r, "_oauthState")
 	if err != nil {
 		log.Error(err.Error())
-		w.WriteHeader(http.StatusInternalServerError)
+		sendError(w, http.StatusInternalServerError)
 		return
 	}
 
@@ -44,8 +41,8 @@ func githubCallback(w http.ResponseWriter, r *http.Request) {
 	var expectedState string
 	var ok bool
 	if expectedState, ok = state.(string); !ok {
-		log.Errorf("couldn't get expectedState from cookie %s.github", "_oauthState")
-		w.WriteHeader(http.StatusInternalServerError)
+		log.Error("couldn't get expectedState from cookie _oauthState.github")
+		sendError(w, http.StatusInternalServerError)
 		return
 	}
 
@@ -60,18 +57,17 @@ func githubCallback(w http.ResponseWriter, r *http.Request) {
 	token, err := configGithub.Exchange(oauth2.NoContext, code)
 	if err != nil {
 		log.Error(err.Error())
-		w.WriteHeader(http.StatusInternalServerError)
+		sendError(w, http.StatusInternalServerError)
 		return
 	}
 
 	httpClient := configGithub.Client(oauth2.NoContext, token)
 	client := github.NewClient(httpClient)
 
-	// Receive user from github client
 	githubUser, _, err := client.Users.Get(oauth2.NoContext, "")
 	if err != nil {
 		log.Error(err.Error())
-		w.WriteHeader(http.StatusInternalServerError)
+		sendError(w, http.StatusInternalServerError)
 		return
 	}
 

@@ -12,13 +12,13 @@ import (
 func handle(w http.ResponseWriter, r *http.Request, a string, p string) {
 	abs := path.Join(path.Dir(config.Root), p)
 	if !strings.HasPrefix(abs+"/", config.Root) {
-		w.WriteHeader(http.StatusForbidden)
+		sendError(w, http.StatusForbidden)
 		return
 	}
 
 	stat, err := os.Stat(abs)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
+		sendError(w, http.StatusNotFound)
 		return
 	}
 
@@ -50,7 +50,7 @@ func handle(w http.ResponseWriter, r *http.Request, a string, p string) {
 	fis, err := ioutil.ReadDir(abs)
 	if err != nil {
 		log.Error(err.Error())
-		w.WriteHeader(http.StatusInternalServerError)
+		sendError(w, http.StatusInternalServerError)
 		return
 	}
 	for _, fi := range fis {
@@ -80,7 +80,7 @@ func handle(w http.ResponseWriter, r *http.Request, a string, p string) {
 		content, err := ioutil.ReadFile(abs + "/_package.afy")
 		if err != nil {
 			log.Error(err.Error())
-			w.WriteHeader(http.StatusInternalServerError)
+			sendError(w, http.StatusInternalServerError)
 			return
 		}
 		lines := strings.Split(string(content), "\n")
@@ -98,7 +98,7 @@ func handle(w http.ResponseWriter, r *http.Request, a string, p string) {
 		content, err := ioutil.ReadFile(abs + "/_git.afy")
 		if err != nil {
 			log.Error(err.Error())
-			w.WriteHeader(http.StatusInternalServerError)
+			sendError(w, http.StatusInternalServerError)
 			return
 		}
 		lines := strings.Split(string(content), "\n")
@@ -116,7 +116,7 @@ func handle(w http.ResponseWriter, r *http.Request, a string, p string) {
 		content, err := ioutil.ReadFile(abs + "/_ci.afy")
 		if err != nil {
 			log.Error(err.Error())
-			w.WriteHeader(http.StatusInternalServerError)
+			sendError(w, http.StatusInternalServerError)
 			return
 		}
 		lines := strings.Split(string(content), "\n")

@@ -14,7 +14,7 @@ func static(w http.ResponseWriter, r *http.Request, abs string) {
 
 	content, err := ioutil.ReadFile(abs)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		sendError(w, http.StatusInternalServerError)
 		return
 	}
 

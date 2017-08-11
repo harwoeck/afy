@@ -2,15 +2,12 @@
     "addr": "127.0.0.1:8082",
 
     "host": "public.afy.io",
+    "tls": false,
     "cert": "",
     "key": "",
 
-    "root": "/mnt/c/repos/vikebot-web/",
+    "root": "/mnt/c/repos/afy/",
 
-    "session_auth": "d9337ca1073784d84d4c0cbc2cc5a840",
-    "session_crypt": "8b5a1be2c1bb70c7ec5e5d0caa478cd7",
-    "session_domain": "public.afy.io",
-
-    "github_client_id": "b11260eb57f03bccd347",
-    "github_client_secret": "73b6ae95dbf1f12813b1d8f5cb62ab60b87d714d"
+    "github_client_id": "",
+    "github_client_secret": ""
 }

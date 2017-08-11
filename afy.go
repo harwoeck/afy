@@ -25,14 +25,19 @@ var page string
 var tmpl *template.Template
 
 func init() {
-	log = logging.MustGetLogger("vbgs")
+	log = logging.MustGetLogger("afy")
 	format := logging.MustStringFormatter("%{color}[%{time:15:04:05.000}][%{shortfile}(%{shortfunc})-%{level:.4s}]%{color:reset} %{message}")
 	backend := logging.NewLogBackend(os.Stdout, "", 0)
 	backendFmt := logging.NewBackendFormatter(backend, format)
 	logging.SetBackend(backendFmt)
 
-	cnfg := flag.String("config", "config.json", "File system location pointing to the gameserver instance configuration")
+	cnfg := flag.String("config", "", "Path to config file")
 	flag.Parse()
+
+	if cnfg == nil || *cnfg == "" {
+		log.Error("Must provide parameter '-config filename.json'")
+		os.Exit(1)
+	}
 
 	b, err := ioutil.ReadFile(*cnfg)
 	if err != nil {
@@ -61,22 +66,21 @@ func main() {
 	configGithub = &oauth2.Config{
 		ClientID:     config.GithubClientID,
 		ClientSecret: config.GithubClientSecret,
-		Scopes: []string{
-			"user:email",
-		},
-		Endpoint: apiGithub.Endpoint,
+		Scopes:       []string{},
+		Endpoint:     apiGithub.Endpoint,
 	}
 
 	cookies = sessions.NewCookieStore(securecookie.GenerateRandomKey(32), securecookie.GenerateRandomKey(32))
 	cookies.Options = &sessions.Options{
 		Path:     "/",
 		Domain:   config.Host,
-		MaxAge:   60 * 60 * 24 * 7 * 4 * 12,
+		MaxAge:   60 * 60 * 6,
 		Secure:   true,
 		HttpOnly: true,
 	}
 
-	http.HandleFunc("/", recoveryHandler(githubLogin))
+	http.HandleFunc("/", recoveryHandler(router))
+	http.HandleFunc("/auth/github/login", recoveryHandler(githubLogin))
 	http.HandleFunc("/auth/github/callback", recoveryHandler(githubCallback))
 	http.HandleFunc("/f/", recoveryHandler(login))
 
