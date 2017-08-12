@@ -8,9 +8,13 @@ import (
 )
 
 func static(w http.ResponseWriter, r *http.Request, abs string) {
-	ext := abs[strings.LastIndex(abs, "."):]
-	mimeType := mime.TypeByExtension(ext)
-	w.Header().Set("Content-Type", mimeType)
+	if strings.Contains(abs, ".") {
+		ext := abs[strings.LastIndex(abs, "."):]
+		mimeType := mime.TypeByExtension(ext)
+		if mimeType != "" {
+			w.Header().Set("Content-Type", mimeType)
+		}
+	}
 
 	content, err := ioutil.ReadFile(abs)
 	if err != nil {
