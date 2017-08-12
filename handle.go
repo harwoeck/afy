@@ -50,6 +50,7 @@ func handle(w http.ResponseWriter, r *http.Request, a string, p string) {
 	fis, err := ioutil.ReadDir(abs)
 	if err != nil && strings.Contains(err.Error(), "permission denied") {
 		sendError(w, http.StatusForbidden)
+		return
 	} else if err != nil {
 		log.Error(err.Error())
 		sendError(w, http.StatusInternalServerError)
