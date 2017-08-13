@@ -106,7 +106,6 @@ func githubCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if !found {
-		log.Error(err.Error())
 		log.Infof("login: github(%d) -> not authorized", *githubUser.ID)
 		sendError(w, http.StatusForbidden)
 		return
