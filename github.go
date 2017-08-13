@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
@@ -84,7 +85,17 @@ func githubCallback(w http.ResponseWriter, r *http.Request) {
 	defer f.Close()
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
-		if scanner.Text() == strconv.Itoa(*githubUser.ID) {
+		cur := scanner.Text()
+		if strings.Contains(cur, " ") {
+			cur = strings.TrimSpace(strings.Split(cur, " ")[0])
+		}
+		itemID, err := strconv.Atoi(cur)
+		if err != nil {
+			log.Error(err.Error())
+			sendError(w, http.StatusInternalServerError)
+			return
+		}
+		if itemID == *githubUser.ID {
 			found = true
 			break
 		}
