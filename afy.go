@@ -11,7 +11,7 @@ import (
 
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
-	logging "github.com/op/go-logging"
+	"github.com/op/go-logging"
 	"golang.org/x/oauth2"
 	apiGithub "golang.org/x/oauth2/github"
 )

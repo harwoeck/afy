@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"net/http"
+	"os"
+	"strconv"
 
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
@@ -68,6 +71,33 @@ func githubCallback(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Error(err.Error())
 		sendError(w, http.StatusInternalServerError)
+		return
+	}
+
+	var found bool
+	f, err := os.Open("github.txt")
+	if err != nil {
+		log.Error(err.Error())
+		sendError(w, http.StatusInternalServerError)
+		return
+	}
+	defer f.Close()
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		if scanner.Text() == strconv.Itoa(*githubUser.ID) {
+			found = true
+			break
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		log.Error(err.Error())
+		sendError(w, http.StatusInternalServerError)
+		return
+	}
+	if !found {
+		log.Error(err.Error())
+		log.Infof("login: github(%d) -> not authorized", *githubUser.ID)
+		sendError(w, http.StatusForbidden)
 		return
 	}
 
