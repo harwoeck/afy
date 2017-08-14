@@ -1,22 +1,26 @@
 language: go
-sudo: true
 
 matrix:
   include:
-    - go: 1.7
-    - go: 1.8
-    - go: tip
+  - go: 1.5
+  - go: 1.6
+  - go: 1.7
+  - go: 1.8
+  - go: tip
   allow_failures:
-    - go: tip
+  - go: tip
 
-script: 
-  - go test -v -cover -covermode atomic
-  - go build -o afy -i -v
+install:
+- go get github.com/NYTimes/gziphandler
+
+script:
+- go build -o afy -v -a
+- go test -v -cover -covermode atomic 2>&1 | tee -a testreport.txt
 
 notifications:
   webhooks:
     urls:
-      - https://webhooks.gitter.im/e/3b5a8b83392d2f7e616a
-    on_success: change
-    on_failure: change
-    on_start: never
+      - secure: DMDqPXnGsHUFp2pBxYLYxPXOO6UA2Sm2kw9vUViiLCQMOj75eXPuX57qypcyxicz2kmUExdahiXL5YWcVzL58a64++1OYOukqJz1uhFshiqlNTmnW6ld5ZyBlOrhBMjEYpBFGcWTDXH5iIFlGp1umOQPaFMWQxRHUeiE9cFxpmXopLZC6DmrwW5VFeXbdNC8PZxjvvKZMxvfetNMGS/2A/WE1bJN0i+DnovMQ0NMKnobtEvHgjFkSqRv7XMKh673fPu1wYSV0BV4QMq2nytUUeWoMl3/g2EZJZs+E9radDqaR8cmRZR6oE0riG1vTj9g2bYHK9ixHEUDvPWv8usWw+F9PHpjorCnrV0ghLRCI1dA2kpUczUcxpXHYOFtTica7hi5F0ea52x3Szb93Dr0e/3E4fpeosG9Y/1PIo9Ov3t5ZIw5x5D9PENsHMmLAtehMoJTQ85h9Frb2pAnH89i7IO+tAelIz72pTvdqKF1pQIQf3CIflDRqOYpKKHuwabzN0dNmRBv9H186bCwNbN+UCWGkM/0o98EPWur0J/BlSktUQGG+bETy2WcXIkLxaX/6vK9pQIvI9KD33HkBOFQYPVSBjeG+zBTwVB8dcKmUPqPbmhY8cGtfQqoci15flhokpdJNaBtBOEPoRszLWlvdKaNPijXFE/m56/5m9okNSU=
+    on_success: always
+    on_failure: always
+    on_start: always
