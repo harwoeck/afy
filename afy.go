@@ -9,6 +9,7 @@ import (
 	"os"
 	"runtime/debug"
 
+	"github.com/NYTimes/gziphandler"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 	"github.com/op/go-logging"
@@ -79,10 +80,10 @@ func main() {
 		HttpOnly: true,
 	}
 
-	http.HandleFunc("/", recoveryHandler(router))
-	http.HandleFunc("/auth/github/login", recoveryHandler(githubLogin))
-	http.HandleFunc("/auth/github/callback", recoveryHandler(githubCallback))
-	http.HandleFunc("/f/", recoveryHandler(login))
+	http.Handle("/", gziphandler.GzipHandler(http.HandlerFunc(recoveryHandler(router))))
+	http.Handle("/auth/github/login", gziphandler.GzipHandler(http.HandlerFunc(recoveryHandler(githubLogin))))
+	http.Handle("/auth/github/callback", gziphandler.GzipHandler(http.HandlerFunc(recoveryHandler(githubCallback))))
+	http.Handle("/f/", gziphandler.GzipHandler(http.HandlerFunc(recoveryHandler(login))))
 
 	// Serve ether TLS or not
 	if config.TLS {
