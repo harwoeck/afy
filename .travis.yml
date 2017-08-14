@@ -12,6 +12,12 @@ matrix:
 
 install:
 - go get github.com/NYTimes/gziphandler
+- go get github.com/gorilla/securecookie
+- go get github.com/gorilla/sessions
+- go get github.com/op/go-logging
+- go get golang.org/x/oauth2
+- go get golang.org/x/oauth2/github
+- go get github.com/google/go-github/github
 
 script:
 - go build -o afy -v -a
