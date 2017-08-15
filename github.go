@@ -93,7 +93,7 @@ func githubCallback(w http.ResponseWriter, r *http.Request) {
 				log.Warningf("login: github(%d).Orgs.List returned: %s", *githubUser.ID, err.Error())
 			} else {
 				for _, item := range orgs {
-					if *item.Name == config.ACP.OrgName {
+					if *item.Login == config.ACP.OrgName {
 						authorized = true
 						break
 					}

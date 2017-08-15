@@ -1,10 +1,40 @@
 <html lang="en">
-<body>
+<head>
+    <meta charset="utf-8">
+    <meta name="author" content="Florian Harwoeck">
+    <link rel="author" href="https://harwoeck.at">
+    <meta name="language" content="en">
+    <meta name="description" itemprop="description" content="{{.Description}}">
+    <meta name="keywords" content="{{.Keywords}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="theme-color" content="#abfb31">
+    <meta property="og:title" content="{{.Title}}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{.Favicon}}">
+    <meta property="og:image" content="{{.Favicon}}">
+    <meta property="og:description" content="{{.Description}}">
+    <meta property="og:site_name" content="{{.Title}}">
+    <meta itemprop="name" content="{{.Title}}">
+    <meta itemprop="description" content="{{.Description}}">
+    <meta itemprop="image" content="{{.Favicon}}">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@harwoeck">
+    <meta name="twitter:title" content="{{.Title}}">
+    <meta name="twitter:description" content="{{.Description}}">
+    <meta name="twitter:creator" content="@harwoeck">
+    <meta name="twitter:image" content="{{.Favicon}}">
+    <title>{{.Title}}</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="{{.Favicon}}">
+    <link rel="apple-touch-icon" href="{{.Favicon}}">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css">
-    <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Mono">
     <style>
-        @import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono');
         body {
             padding: 1rem !important;
         }
@@ -24,8 +54,8 @@
             background-color: lightgray;
         }
     </style>
-</body>
-<head>
+</head>
+<body>
     <h1>Index of {{.QuickPathNavigation}}</h1>
     <div class="ui grid">
         <div class="twelve wide column">
@@ -50,28 +80,16 @@
         </div>
         <div class="four wide column">
             <div class="ui segment">
-                <div class="ui top attached label">Quick navigation</div>
-                <div class="ui search">
-                    <div class="ui fluid icon input">
-                        <input class="prompt" type="text" placeholder="Type your directory ...">
-                        <i class="search icon"></i>
-                    </div>
-                    <div class="results"></div>
-                </div>
-            </div>
-            <div class="ui segment">
                 <div class="ui top attached label">Details</div>
                 <div class="ui list">
-                    <div class="item">
-                        <div class="header">Directory</div>{{.QuickPathNavigation}}</div>
-                    <div class="item">
-                        <div class="header">Size</div>{{.DirSize}}</div>
+                    <div class="item"><div class="header">Directory</div>{{.QuickPathNavigation}}</div>
+                    <div class="item"><div class="header">Size</div>{{.DirSize}}</div>
                 </div>
                 {{if .Package}}
                 <div class="ui horizontal divider">Package</div>
                 <div class="ui list">
-                    <div class="item"><div class="header">Name</div>vbgs</div>
-                    <div class="item"><div class="header">Hierarchy</div>2</div>
+                    <div class="item"><div class="header">Name</div>{{.PackageName}}</div>
+                    <div class="item"><div class="header">Hierarchy</div>{{.PackageHierarchy}}</div>
                     <div class="item"><div class="header">Depends on</div>{{.PackageDependsOn}}</div>
                     <!--
                         <img src="https://img.shields.io/badge/coverage-67.4%25%20(atomic)-green.svg">
@@ -82,14 +100,14 @@
                 {{if .Git}}
                 <div class="ui horizontal divider">Git</div>
                 <div class="ui list">
-                    <div class="item"><div class="header">Commit</div><a href="{{.GitLink}}">{{.GitHash}}</a></div>
+                    <div class="item"><div class="header">Commit</div><a href="{{.GitLink}}" target="_blank">{{.GitHash}}</a></div>
                     <div class="item"><div class="header">Message</div>{{.GitMessage}}</div>
                 </div>
                 {{end}}
                 {{if .CI}}
                 <div class="ui horizontal divider">CI</div>
                 <div class="ui list">
-                    <div class="item"><div class="header">Job</div><a href="{{.CILink}}">{{.CIJob}}</a></div>
+                    <div class="item"><div class="header">Job</div><a href="{{.CILink}}" target="_blank">{{.CIJob}}</a></div>
                     <div class="item"><div class="header">Build time</div>{{.CIBuildTime}}</div>
                     {{if .CIHasReport}}
                     <div class="item"><div class="header">Coverage</div>{{.CICoverage}} - <a href="_coverage.afy">Report</a></div>
@@ -99,19 +117,8 @@
             </div>
         </div>
     </div>
-    <script>
-        $('.ui.search').search({
-            apiSettings: {
-                url: '//api.github.com/search/repositories?q={query}'
-            },
-            fields: {
-                results: 'items',
-                title: 'name',
-                url: 'html_url'
-            },
-            minCharacters: 3,
-            showNoResults: true
-        });
-    </script>
-</head>
+
+    <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.js"></script>
+</body>
 </html>

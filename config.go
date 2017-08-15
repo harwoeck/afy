@@ -1,6 +1,6 @@
 package main
 
-type yamlCnfg struct {
+type ymlCnfg struct {
 	Addr string
 	Host string
 	TLS  struct {
@@ -24,5 +24,11 @@ type yamlCnfg struct {
 		UseStatic bool
 		AuthKey   string
 		CryptKey  string
+	}
+	Branding struct {
+		Name        string
+		Description string
+		Keywords    string
+		Favicon     string
 	}
 }

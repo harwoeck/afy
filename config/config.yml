@@ -1,12 +1,30 @@
-addr: 127.0.0.1:80
+addr: 127.0.0.1:8080
 host: playground.afy.io
+
+tls:
+  active: false
+  cert: cert.pem
+  key: key.pem
+
 gzip: true
-mnt: .
-oauht:
+mnt: /mnt/afystorage
+
+acp:
   github:
     clientid: xxx
     clientsecret: yyy
+  whitelist: true
+  whitelistfile: github_whitelist.txt
+  org: true
+  orgname: YOURORGNAME
+
 cookie:
   usestatic: true
-  authkey: edYfrg3xWOtd6ya4rm7/Y3bky4mMJMnxBJm5TRv4Lwkcnbl36WqLJVN9Na368BIwX4PaoAX+eLm6O6zRTdiRMQ==
-  cryptkey: 0Fyeq7vnFyJHlEub3f8ZsTkdzwHQgZcZvNm3SAcrwGo=
+  authkey: xxx
+  cryptkey: yyy
+
+branding:
+  name: afy.io
+  description: afy.io - The simplest artifact repository manager out there. Really.
+  keywords: afy.io,afy,articat-repository-manager,binary-repository-manager,binary-repository,binary-manager,binary-storage,binary-browser,artifact-repository,artifact-manager,artifact-storage,artifact-browser
+  favicon: https://afy.io/content/afyio_logo.png

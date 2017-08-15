@@ -24,7 +24,7 @@ import (
 var log *logging.Logger
 
 // Configs
-var config *yamlCnfg
+var config *ymlCnfg
 var configGithub *oauth2.Config
 
 // Cookie storage
@@ -70,7 +70,7 @@ func init() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	config = &yamlCnfg{}
+	config = &ymlCnfg{}
 	err = yaml.Unmarshal(content, config)
 	if err != nil {
 		log.Fatal(err.Error())
@@ -128,12 +128,9 @@ func init() {
 		Endpoint:     apiGithub.Endpoint,
 	}
 
-	// Load favicon from base64 src
-	favicon = base64Must(faviconSrc)
-
 	// Load whitelist if enabled
 	if config.ACP.Whitelist {
-		assertFSDirPtr(&config.ACP.WhitelistFile)
+		assertFSFilePtr(&config.ACP.WhitelistFile)
 		f, err := os.Open(config.ACP.WhitelistFile)
 		if err != nil {
 			log.Fatal(err.Error())

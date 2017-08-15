@@ -6,12 +6,18 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 )
 
 func srvIndex(w http.ResponseWriter, r *http.Request, a string, p string) {
-	abs := path.Join(path.Dir(config.Mnt), p)
-	if !strings.HasPrefix(abs+"/", config.Mnt) {
+	jnd := path.Join(config.Mnt, p)
+	abs, err := filepath.Abs(jnd)
+	if err != nil {
+		sendError(w, http.StatusForbidden)
+		return
+	}
+	if !strings.HasPrefix(abs, config.Mnt) {
 		sendError(w, http.StatusForbidden)
 		return
 	}
@@ -21,7 +27,6 @@ func srvIndex(w http.ResponseWriter, r *http.Request, a string, p string) {
 		sendError(w, http.StatusNotFound)
 		return
 	}
-
 	if !stat.IsDir() {
 		srvStatic(w, r, abs)
 		return
@@ -130,6 +135,20 @@ func srvIndex(w http.ResponseWriter, r *http.Request, a string, p string) {
 			pipe.CICoverage = lines[3]
 			pipe.CIHasReport = true
 		}
+	}
+
+	// Branding
+	if config.Branding.Name == "" {
+		pipe.Title = "/" + p + " - " + config.Host
+	} else {
+		pipe.Title = "/" + p + " - " + config.Branding.Name
+	}
+	pipe.Description = config.Branding.Description
+	pipe.Keywords = config.Branding.Keywords
+	if config.Branding.Favicon == "" {
+		pipe.Favicon = "https://afy.io/content/afyio_logo.png"
+	} else {
+		pipe.Favicon = config.Branding.Favicon
 	}
 
 	tmpl.Execute(w, pipe)

@@ -3,6 +3,11 @@ package main
 import "html/template"
 
 type response struct {
+	Title       string
+	Description string
+	Keywords    string
+	Favicon     string
+
 	QuickPathNavigation template.HTML
 	Index               []indexItem
 	IndexF              []indexItem
@@ -22,8 +27,8 @@ type response struct {
 	CIJob       string
 	CILink      string
 	CIBuildTime string
-	CICoverage  string
 	CIHasReport bool
+	CICoverage  string
 }
 
 type indexItem struct {
