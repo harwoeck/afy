@@ -1,15 +1,28 @@
 package main
 
-type configuration struct {
-	Addr string `json:"addr"`
-
-	Host string `json:"host"`
-	TLS  bool   `json:"tls"`
-	Cert string `json:"cert"`
-	Key  string `json:"key"`
-
-	Root string `json:"root"`
-
-	GithubClientID     string `json:"github_client_id"`
-	GithubClientSecret string `json:"github_client_secret"`
+type yamlCnfg struct {
+	Addr string
+	Host string
+	TLS  struct {
+		Active bool
+		Cert   string
+		Key    string
+	}
+	Gzip bool
+	Mnt  string
+	ACP  struct {
+		Github struct {
+			ClientID     string
+			ClientSecret string
+		}
+		Whitelist     bool
+		WhitelistFile string
+		Org           bool
+		OrgName       string
+	}
+	Cookie struct {
+		UseStatic bool
+		AuthKey   string
+		CryptKey  string
+	}
 }

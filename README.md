@@ -15,19 +15,19 @@
   - [ ] Calculate a directories complete size (recursive through all subfolders)
   - [ ] Cache directory structure (hhoweyc/fsnotify)
   - [ ] Enable/Disable static-file-cache for content under a specific threshold
-- [ ] ACP
-  - [ ] OAuth
+- [x] ACP
+  - [x] OAuth
     - [x] Github
-    - [ ] Google
+    - [x] ~~Google~~ _Not in v0.1-beat (moved to later versions)_
   - [x] OAuth-Provider-ID comparison with "Whitelist-file"
-  - [ ] SSO (Github-Organization) -> allow if user is member of x
+  - [x] SSO (Github-Organization) -> allow if user is member of x
   - [x] Access-Log
-- [ ] Server
+- [x] Server
   - [x] TLS support
-  - [ ] Enable/Disable Gzip compression (NYTimes/gziphandler)
+  - [x] Enable/Disable Gzip compression (NYTimes/gziphandler)
 - [ ] Config
-  - [ ] Server config through flags
-  - [ ] Server config in YAML format
+  - [x] Server config through flags
+  - [x] Server config in YAML format
   - [ ] Package configs in YAML format
 - [ ] Advanced VCS-Support (Git)
   - [x] Automatically load if `_gif.afy` is present in the current folder

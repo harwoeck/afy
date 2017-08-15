@@ -9,9 +9,9 @@ import (
 	"strings"
 )
 
-func handle(w http.ResponseWriter, r *http.Request, a string, p string) {
-	abs := path.Join(path.Dir(config.Root), p)
-	if !strings.HasPrefix(abs+"/", config.Root) {
+func srvIndex(w http.ResponseWriter, r *http.Request, a string, p string) {
+	abs := path.Join(path.Dir(config.Mnt), p)
+	if !strings.HasPrefix(abs+"/", config.Mnt) {
 		sendError(w, http.StatusForbidden)
 		return
 	}
@@ -23,7 +23,7 @@ func handle(w http.ResponseWriter, r *http.Request, a string, p string) {
 	}
 
 	if !stat.IsDir() {
-		static(w, r, abs)
+		srvStatic(w, r, abs)
 		return
 	}
 

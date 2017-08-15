@@ -1,11 +1,7 @@
 package main
 
 import (
-	"bufio"
 	"net/http"
-	"os"
-	"strconv"
-	"strings"
 
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
@@ -75,45 +71,52 @@ func githubCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var found bool
-	f, err := os.Open("github.txt")
-	if err != nil {
-		log.Error(err.Error())
-		sendError(w, http.StatusInternalServerError)
-		return
-	}
-	defer f.Close()
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		cur := scanner.Text()
-		if strings.Contains(cur, " ") {
-			cur = strings.TrimSpace(strings.Split(cur, " ")[0])
+	authorized := false
+	// If no authentication method is defined set authorized to true and continue
+	if !config.ACP.Whitelist && !config.ACP.Org {
+		authorized = true
+	} else {
+		// Query whitelisted persons
+		if config.ACP.Whitelist {
+			for _, entry := range whitelist {
+				if entry == *githubUser.ID {
+					authorized = true
+					break
+				}
+			}
 		}
-		itemID, err := strconv.Atoi(cur)
-		if err != nil {
-			log.Error(err.Error())
-			sendError(w, http.StatusInternalServerError)
-			return
-		}
-		if itemID == *githubUser.ID {
-			found = true
-			break
+		// Check if the the user is a member of a specific organization to enable
+		// SSO functionality
+		if config.ACP.Org {
+			orgs, _, err := client.Organizations.List(oauth2.NoContext, "", nil)
+			if err != nil {
+				log.Warningf("login: github(%d).Orgs.List returned: %s", *githubUser.ID, err.Error())
+			} else {
+				for _, item := range orgs {
+					if *item.Name == config.ACP.OrgName {
+						authorized = true
+						break
+					}
+				}
+			}
 		}
 	}
-	if err := scanner.Err(); err != nil {
-		log.Error(err.Error())
-		sendError(w, http.StatusInternalServerError)
-		return
-	}
-	if !found {
+	// Send forbidden pages to unauthorized users and log their github id
+	if !authorized {
 		log.Infof("login: github(%d) -> not authorized", *githubUser.ID)
 		sendError(w, http.StatusForbidden)
 		return
 	}
 
-	key := keyProvider(32)
+	// If user is already logged in delete the old key
+	if k, exists := userKey[*githubUser.ID]; exists {
+		delete(keyUser, k)
+		delete(userKey, *githubUser.ID)
+	}
 
-	users[key] = *githubUser.ID
+	key := keyProvider(32)
+	keyUser[key] = *githubUser.ID
+	userKey[*githubUser.ID] = key
 	log.Infof("login: github(%d) -> %s", *githubUser.ID, key)
 
 	http.Redirect(w, r, "/f/"+key+"/", http.StatusTemporaryRedirect)

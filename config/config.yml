@@ -1,0 +1,12 @@
+addr: 127.0.0.1:80
+host: playground.afy.io
+gzip: true
+mnt: .
+oauht:
+  github:
+    clientid: xxx
+    clientsecret: yyy
+cookie:
+  usestatic: true
+  authkey: edYfrg3xWOtd6ya4rm7/Y3bky4mMJMnxBJm5TRv4Lwkcnbl36WqLJVN9Na368BIwX4PaoAX+eLm6O6zRTdiRMQ==
+  cryptkey: 0Fyeq7vnFyJHlEub3f8ZsTkdzwHQgZcZvNm3SAcrwGo=
