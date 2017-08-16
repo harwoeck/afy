@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img alt="afy.io label" src="afy_label.png">
+  <a href="https://afy.io" target="_blank"><img alt="afy.io label" src="afy_label.png"></a>
 </h1>
 
 [![Build Status](https://travis-ci.org/harwoeck/afy.svg?branch=master)](https://travis-ci.org/harwoeck/afy)
@@ -18,7 +18,7 @@
 - [x] ACP
   - [x] OAuth
     - [x] Github
-    - [x] ~~Google~~ _Not in v0.1-beat (moved to later versions)_
+    - [x] ~~Google~~ _Not in v0.1-beta (moved to later versions)_
   - [x] OAuth-Provider-ID comparison with "Whitelist-file"
   - [x] SSO (Github-Organization) -> allow if user is member of x
   - [x] Access-Log
