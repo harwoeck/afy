@@ -160,7 +160,7 @@ func main() {
 		"/":                     router,
 		"/auth/github/login":    githubLogin,
 		"/auth/github/callback": githubCallback,
-		"/f/": authLayer,
+		"/f/": authlayer,
 	}
 	for pattern, patternFunc := range handles {
 		if config.Gzip {

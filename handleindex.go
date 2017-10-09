@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func srvIndex(w http.ResponseWriter, r *http.Request, a string, p string) {
+func handleindex(w http.ResponseWriter, r *http.Request, a string, p string) {
 	jnd := path.Join(config.Mnt, p)
 	abs, err := filepath.Abs(jnd)
 	if err != nil {
@@ -28,7 +28,7 @@ func srvIndex(w http.ResponseWriter, r *http.Request, a string, p string) {
 		return
 	}
 	if !stat.IsDir() {
-		srvStatic(w, r, abs)
+		handlestatic(w, r, abs)
 		return
 	}
 

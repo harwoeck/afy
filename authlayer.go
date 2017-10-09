@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func authLayer(w http.ResponseWriter, r *http.Request) {
+func authlayer(w http.ResponseWriter, r *http.Request) {
 	url := r.URL.Path[len("/f/"):]
 	if !strings.Contains(url, "/") {
 		sendError(w, http.StatusForbidden)
@@ -26,5 +26,5 @@ func authLayer(w http.ResponseWriter, r *http.Request) {
 	log.Infof("access: github(%d) -> %s", id, url[32:])
 
 	a := r.URL.Path[:len("/f/")+32+len("/")]
-	srvIndex(w, r, a, strings.TrimPrefix(r.URL.Path, a))
+	handleindex(w, r, a, strings.TrimPrefix(r.URL.Path, a))
 }

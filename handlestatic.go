@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func srvStatic(w http.ResponseWriter, r *http.Request, abs string) {
+func handlestatic(w http.ResponseWriter, r *http.Request, abs string) {
 	if strings.Contains(abs, ".") {
 		ext := abs[strings.LastIndex(abs, "."):]
 		mimeType := mime.TypeByExtension(ext)
