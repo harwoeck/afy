@@ -15,7 +15,12 @@ func githubLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stateString := keyProvider(32)
+	stateString, err := cryptogen(32)
+	if err != nil {
+		log.Error(err.Error())
+		sendError(w, http.StatusInternalServerError)
+		return
+	}
 
 	session.Values["github"] = stateString
 	err = session.Save(r, w)
@@ -114,7 +119,13 @@ func githubCallback(w http.ResponseWriter, r *http.Request) {
 		delete(userKey, *githubUser.ID)
 	}
 
-	key := keyProvider(32)
+	key, err := cryptogen(32)
+	if err != nil {
+		log.Error(err.Error())
+		sendError(w, http.StatusInternalServerError)
+		return
+	}
+
 	keyUser[key] = *githubUser.ID
 	userKey[*githubUser.ID] = key
 	log.Infof("login: github(%d) -> %s", *githubUser.ID, key)
