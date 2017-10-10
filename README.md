@@ -24,15 +24,15 @@
 - [x] Server
   - [x] TLS support
   - [x] Enable/Disable Gzip compression (NYTimes/gziphandler)
-- [ ] Config
+- [x] Config
   - [x] Server config through flags
   - [x] Server config in YAML format
-  - [ ] Package configs in YAML format
-- [ ] Advanced VCS-Support (Git)
+  - [x] Package configs in YAML format
+- [x] Advanced VCS-Support (Git)
   - [x] Automatically load if `_gif.afy` is present in the current folder
   - [x] Commit-ID (SHA hash)
   - [x] Commit-Link
-  - [ ] Commit-Author (Name, Email, Link)
+  - [x] Commit-Author (Name, Email, Link)
   - [x] Commit-Message
 - [x] Advanced CI-Support
   - [x] Automatically load if `_ci.afy` is present in the current folder
