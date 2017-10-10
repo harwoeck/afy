@@ -9,6 +9,9 @@ tls:
 gzip: true
 mnt: /mnt/afystorage
 
+fscache:
+  refreshtime: 5
+
 acp:
   github:
     clientid: xxx

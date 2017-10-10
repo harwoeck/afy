@@ -1,39 +1,58 @@
 package main
 
-import "html/template"
+import (
+	"html/template"
+	"time"
+)
 
-type response struct {
-	Title       string
-	Description string
-	Keywords    string
-	Favicon     string
+// indexd(irectory)
+type indexd struct {
+	Title    string
+	Link     string
+	Modified time.Time
+	Size     int64
+	Access   bool
 
 	QuickPathNavigation template.HTML
-	Index               []indexItem
-	IndexF              []indexItem
-	DirSize             int64
 
-	Package          bool
-	PackageName      string
-	PackageHierarchy string
-	PackageDependsOn template.HTML
+	Dirs  []indexd
+	Files []indexf
 
-	Git        bool
-	GitHash    string
-	GitLink    string
-	GitMessage string
-
-	CI          bool
-	CIJob       string
-	CILink      string
-	CIBuildTime string
-	CIHasReport bool
-	CICoverage  string
+	Pkg pkg
+	CI  ci
+	Git git
 }
 
-type indexItem struct {
-	Name     string
-	Link     string
-	Modified string
-	Size     int64
+type pkg struct {
+	Name        string
+	Link        string
+	Description string
+	DependsOn   template.HTML
+}
+
+type git struct {
+	Hash    string
+	Link    string
+	Message string
+	Branch  string
+	Tag     string
+	Author  struct {
+		Name  string
+		Email string
+		Link  string
+	}
+}
+
+type ci struct {
+	Job       string
+	Link      string
+	BuildTime string
+	Coverage  []struct {
+		Percentage string
+		Report     string
+	}
+}
+
+// indexf(ile)
+type indexf struct {
 }
