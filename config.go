@@ -8,9 +8,14 @@ type ymlCnfg struct {
 		Cert   string
 		Key    string
 	}
-	Gzip bool
-	Mnt  string
-	ACP  struct {
+	Gzip  bool
+	Mnt   string
+	Cache struct {
+		Active      bool
+		FileContent bool
+		Threshold   int
+	}
+	ACP struct {
 		Github struct {
 			ClientID     string
 			ClientSecret string
